@@ -4,6 +4,7 @@
 # import all needed packages
 from imutils.video import VideoStream
 import argparse
+import requests
 import time
 import json
 import cv2
@@ -23,7 +24,7 @@ args = vars(ap.parse_args())
 cascade_path = args["cascade"] or "haarcascade_frontalface_default.xml"
 encodings_path = args["encodings"] or "trainer.yml"
 names_path = args["names"] or "names.json"
-confidence_limit = args["confidence"] or 120
+confidence_limit = args["confidence"] or 60
 
 # load OpenCV's Haar cascade for face detection
 face_detector = cv2.CascadeClassifier(cascade_path)
@@ -31,6 +32,9 @@ face_detector = cv2.CascadeClassifier(cascade_path)
 # create LBPH face recognizer instance and load encodings
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read(encodings_path)
+
+URL = "http://localhost:8080/recognition"
+headers = {'Content-Type': 'application/json'}
 
 # read names dictionary from .json file
 with open(names_path) as file:
@@ -46,6 +50,8 @@ time.sleep(2.0)
 while True:
     # read current frame
     frame = vs.read()
+    frame_view = frame.copy()
+
     # convert frame to gray scale
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -54,6 +60,7 @@ while True:
         gray_frame, scaleFactor=1.1,
         minNeighbors=5, minSize=(30, 30))
     # iterate over detected faces
+    recognized_faces = {"names": []}
     for (x, y, w, h) in faces:
         # recognise face
         id_predicted, conf = recognizer.predict(gray_frame[y:y + h, x:x + w])
@@ -62,19 +69,24 @@ while True:
             name = names[str(id_predicted)]
         else:
             name = "Unknown"
+        recognized_faces["names"].append(name)
 
         # draw face bounding-box on frame with predicted name
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        cv2.putText(frame, name + str(conf), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
-
-    # TODO get all faces and send them to server
+        cv2.rectangle(frame_view, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.putText(frame_view, name + str(conf), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
+    try:
+        # send request to backend server with all faces recognized
+        r = requests.post(url=URL, headers=headers, data=json.dumps(recognized_faces))
+    except:
+        print("[ERR] exception when sending request")
 
     # show the output frame
-    cv2.imshow("Frame", frame)
+    cv2.imshow("Frame", frame_view)
     key = cv2.waitKey(1) & 0xFF
 
     # if the `q` key was pressed stop detecting
     if key == ord("q"):
+        print("[INFO] process stopped by user")
         break
 
 # cleanup

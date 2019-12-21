@@ -1,5 +1,5 @@
 # USAGE
-# python3 build_face_dataset.py --identifier "Identifier"
+# python3 build_face_dataset.py
 
 # import all needed packages
 from imutils.video import VideoStream
@@ -12,9 +12,9 @@ import os
 
 def put_text_center(message):
     text_size = cv2.getTextSize(message, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0]
-    textX = int((frame.shape[1] - text_size[0]) / 2)
-    textY = int((frame.shape[0] + text_size[1]) / 2)
-    cv2.putText(frame, message, (textX, textY), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    textX = int((frame_view.shape[1] - text_size[0]) / 2)
+    textY = int((frame_view.shape[0] + text_size[1]) / 2)
+    cv2.putText(frame_view, message, (textX, textY), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
 
 def yes_or_no(question):
@@ -32,7 +32,7 @@ def yes_or_no(question):
 
 # create the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--identifier", required=True,
+ap.add_argument("-i", "--identifier", required=False,
                 help="identifier of user")
 ap.add_argument("-c", "--cascade", required=False,
                 help="path to face cascade")
@@ -41,10 +41,14 @@ ap.add_argument("-n", "--number", required=False,
 args = vars(ap.parse_args())
 
 cascade_path = args["cascade"] or "haarcascade_frontalface_default.xml"
-number = args["number"] or 15
+number = int(args["number"]) or 15
 
+if not args["identifier"]:
+    identifier = str(input('Provide user identifier: ')).lower().strip()
+else:
+    identifier = args["identifier"].lower().strip()
 # create directory for data
-dir_path = os.path.sep.join(["dataset", args["identifier"]])
+dir_path = os.path.sep.join(["dataset", identifier])
 if not os.path.exists(dir_path):
     os.makedirs(dir_path)
 else:
@@ -53,7 +57,7 @@ else:
         filelist = [f for f in os.listdir(dir_path) if f.endswith(".png")]
         for f in filelist:
             os.remove(os.path.join(dir_path, f))
-        print("[INFO] overriding data with ID {}".format(args["identifier"]))
+        print("[INFO] overriding data with ID {}".format(identifier))
     else:
         print("Exiting script. Use another ID")
         exit()
@@ -72,6 +76,7 @@ total = 0
 while total < number:
     # read current frame
     frame = vs.read()
+    frame_view = frame.copy()
     key = cv2.waitKey(1) & 0xFF
     # convert frame to gray scale
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -99,10 +104,10 @@ while total < number:
                 print("[ERR] could not save image")
 
         # draw face bounding-box on frame
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.rectangle(frame_view, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
     # show the output frame
-    cv2.imshow("Frame", frame)
+    cv2.imshow("Frame", frame_view)
 
     # if the `q` key was pressed stop collecting data
     if key == ord("q"):
