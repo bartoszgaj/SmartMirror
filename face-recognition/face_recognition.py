@@ -1,5 +1,5 @@
 # USAGE
-# python pi_face_recognition.py
+# python3 face_recognition.py
 
 # import all needed packages
 from imutils.video import VideoStream
