@@ -3,16 +3,10 @@ import React, {Component} from 'react';
 
 
 class Guest extends Component {
-    state = {
-        date: new Date(),
-    }
-
-    onChange = date => this.setState({ date })
-
     render() {
         return (
             <div>
-                SPADÓWKA
+                YOU ARE UNAUTHORIZED TO VIEW THIS CONTENT
             </div>
         );
     }

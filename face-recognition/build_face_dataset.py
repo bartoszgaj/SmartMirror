@@ -1,5 +1,5 @@
 # USAGE
-# python3 build_face_dataset.py
+# python3 build_face_dataset.py --identifier id --number 30
 
 # import all needed packages
 from imutils.video import VideoStream
