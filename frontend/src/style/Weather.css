@@ -1,0 +1,38 @@
+body {
+    flex-grow: 1;
+    color: white;
+    background-color: black !important;
+}
+.layout {
+    background: black;
+}
+.card {
+    background-color: black !important;
+    min-width: 300px;
+    min-height: 300px;
+    color: white !important;
+}
+.wi {
+    color: white;
+}
+.atmospheric {
+    font-size: 28px;
+    padding: 5px;
+    color: white;
+}
+.recommendation {
+    font-family: Montserrat, sans-serif;
+    padding: 20px 0 10px 0;
+    font-size: 26px;
+    text-align: center;
+    color: white;
+}
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    color: white;
+}
+
+.MuiTypography-colorTextSecondary{
+    color: white !important;
+}

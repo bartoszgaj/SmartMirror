@@ -1,22 +1,42 @@
 import React, {Component} from 'react';
 import LoggedUser from "./LoggedUser";
-import Guest from "./Guest";
 
 
 
 class SmartMirror extends Component {
+    ws = new WebSocket('ws://localhost:8080/ws');
+
     state = {
-        user: false
+        recognitions: {names: []},
     };
 
-    onChange = user => this.setState({ user })
+    componentDidMount() {
+        this.ws.onopen = () => {
+            console.log('connected')
+        };
+
+        this.ws.onmessage = evt => {
+            // listen to data sent from the websocket server
+            const message = JSON.parse(evt.data)
+            this.setState({recognitions: message})
+        };
+
+        this.ws.onclose = () => {
+            console.log('disconnected')
+        }
+    }
 
     render() {
-        if (true) {
-            return <LoggedUser/>
-        }else
-         {
-            return <Guest/>
+        if (this.state.recognitions.names.length > 0) {
+            if (this.state.recognitions.names.filter(function (el) {
+                return el !== "Unknown"
+            }).length > 0) {
+                return <LoggedUser/>
+            } else {
+                return <LoggedUser/>
+            }
+        } else {
+            return  <LoggedUser/>;
         }
     }
 }

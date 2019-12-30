@@ -1,0 +1,32 @@
+.react-calendar{
+    background: black;
+}
+.react-calendar button{
+    color: white;
+}
+.datetime {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center
+}
+.datetime time{
+    font-size: 50pt;
+
+}
+.datetime .date{
+    font-size: 20pt;
+}
+
+.calendar {
+    margin-top: 20px;
+
+    float: left;
+
+}
+.weather {
+    margin-top: 20px;
+
+    max-width: 400px;
+    float: right;
+
+}

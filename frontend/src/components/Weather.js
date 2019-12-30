@@ -1,5 +1,6 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import 'dayjs/locale/pl'
+
 import {
     Card,
     CardContent,
@@ -13,102 +14,23 @@ import {
     ListItemText,
     Typography
 } from "@material-ui/core";
+import '../style/Weather.css'
 
 
 import dayjs from "dayjs";
 import * as weatherIcons from "./icons";
-import * as recommendations from "./recommendations";
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexiGrow: 1,
-        color: "white"
-    },
-    appBar: {
-        background: "transparent",
-        boxShadow: "none"
-    },
-    appLogo: {
-        width: "160px"
-    },
-    paper: {
-        padding: theme.spacing(2),
-        textAlign: "center",
-        color: "white"
-    },
-    layout: {
-        marginTop: "20px",
-        background: "black"
-    },
-    card: {
-        background: "black",
-        minWidth: 600,
-        minHeight: 600,
-        color: "white"
-    },
-    wi: {
-        color: "white",
-    },
-    atmospheric: {
-        fontSize: "28px",
-        padding: "5px",
-        color: "white",
-    },
-    recommendation: {
-        fontFamily: "Montserrat, sans-serif",
-        padding: "20px 0px 10px 0px",
-        fontSize: "26px",
-        textAlign: "center",
-        color: "white"
-    },
-    buttons: {
-        color: "white"
-    },
-    list: {
-        width: 400,
-        color: "white",
-    },
-    fullList: {
-        width: "auto",
-        color: "white",
-
-    },
-    aboutImg: {
-        padding: "30px 150px 0px 150px",
-        width: "100px",
-        color: "white"
-    },
-    aboutText: {
-        fontFamily: "Montserrat",
-        padding: "30px",
-        color: "white"
-    },
-    container: {
-        display: "flex",
-        flexWrap: "wrap",
-        color: "white"
-    },
-    search: {
-        marginTop: "100px"
-    },
-    error: {
-        color: "red",
-        padding: "10px"
-    }
-}));
 
 const AppLayout = props => {
-    const classes = useStyles();
 
     return (
-        <div className={classes.layout}>
+        <div className="layout">
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <WeatherCard
                         currentWeather={props.currentWeather}
                         forecast={props.forecast}
                         icon={props.icon}
-                        recommendation={props.recommendation}
                     />
                 </Grid>
             </Grid>
@@ -123,9 +45,11 @@ const WeatherCardSubheader = props => {
     const description = props.currentWeather.description
         ? props.currentWeather.description
         : "";
+    dayjs.locale("pl");
+
 
     return (
-        <span color={"white"}>
+        <span style={{color: "primary"}}>
             {dayjs(date).format("dddd")}, {dayjs(date).format("h:mm")}{" "}
             {dayjs(date).format("A")},{" "}
             {description.replace(/\w\S*/g, txt => {
@@ -136,7 +60,6 @@ const WeatherCardSubheader = props => {
 };
 
 const Forecast = props => {
-    const classes = useStyles();
     const prefix = "wi wi-";
     const result = props.forecast.map((item, index) => {
         const icon = prefix + weatherIcons.default[item.icon_id].icon;
@@ -149,15 +72,15 @@ const Forecast = props => {
                 ></ListItemText>
                 <IconButton disabled={true} aria-label="forecast icon">
           <span
-              className={`${classes.wi} ${icon}`}
+              className={`wi ${icon}`}
               style={{ fontSize: "24px" }}
           ></span>
                 </IconButton>
                 <span className="temp" style={{ flex: "1 1 0%", textAlign: "right" }}>
-          <Typography variant="body2" component="span" color="white">
+          <Typography variant="body2" component="span">
             {Math.round(item.min)}&deg; /{" "}
           </Typography>
-          <Typography variant="body2" component="span" color="white">
+          <Typography variant="body2" component="span">
             {Math.round(item.max)}&deg;
           </Typography>
         </span>
@@ -173,12 +96,11 @@ const Forecast = props => {
 };
 
 const WeatherCard = props => {
-    const classes = useStyles();
     const humidity = "wi wi-humidity";
     const strongWind = "wi wi-strong-wind";
 
     return (
-        <Card className={classes.card}>
+        <Card className="card">
             <CardHeader
                 title={props.currentWeather.city + ", " + props.currentWeather.country}
                 subheader={
@@ -187,7 +109,7 @@ const WeatherCard = props => {
             />
             <CardContent>
                 <CardMedia
-                    className={`${props.icon} ${classes.wi}`}
+                    className={`${props.icon} wi`}
                     src={props.icon}
                     style={{ fontSize: "128px", float: "right" }}
                 />
@@ -203,25 +125,17 @@ const WeatherCard = props => {
                 <Typography
                     variant="subtitle2"
                     className="atmospheric-conditions"
-                    color="white"
                     gutterBottom
                     style={{ paddingTop: "40px" ,        color: "white"}}
                 >
           <span
-              className={`${strongWind} ${classes.wi} ${classes.atmospheric}`}
+              className={`${strongWind} wi atmospheric`}
           ></span>
-                    {props.currentWeather.wind_speed} km/h Winds{" "}
+                    {props.currentWeather.wind_speed} km/h Wiatr{" "}
                     <span
-                        className={`${humidity} ${classes.wi} ${classes.atmospheric}`}
+                        className={`${humidity} wi atmospheric`}
                     ></span>
-                    {props.currentWeather.humidity}% Humidity
-                </Typography>
-                <Typography
-                    className={`${classes.recommendation} recommendation`}
-                    color="white"
-                    gutterBottom
-                >
-                    {props.recommendation}
+                    {props.currentWeather.humidity}% Wilgotność
                 </Typography>
                 <Divider variant="middle" />
                 <Forecast forecast={props.forecast} />
@@ -236,8 +150,6 @@ class Weather extends React.Component {
         const prefix = "wi wi-";
         const icon =
             prefix + weatherIcons.default[this.props.currentWeather.icon_id].icon;
-        const recommendation =
-            recommendations.default[this.props.currentWeather.icon_id].recommendation;
 
         return (
             <div>
@@ -245,7 +157,6 @@ class Weather extends React.Component {
                     currentWeather={currentWeather}
                     forecast={forecast}
                     icon={icon}
-                    recommendation={recommendation}
                 />
             </div>
         );

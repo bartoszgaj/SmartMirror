@@ -2,13 +2,17 @@ import React, {Component} from 'react';
 import { Container } from "@material-ui/core";
 import Weather from "./Weather";
 import Calendar from "react-calendar";
+import '../style/LoggedUser.css';
+import Timer from "./Timer";
+import Label from "./Label";
+import Box from "@material-ui/core/Box";
 
 
 class LoggedUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            city: "Cracow",
+            city: "Kraków",
             currentWeather: {},
             forecast: [],
         };
@@ -34,9 +38,7 @@ class LoggedUser extends Component {
             .then(res => this.handleResponse(res))
             .then(weather => {
                 if (Object.entries(weather).length) {
-                    const mappedData = this.mapDataToWeatherInterface(weather);
-
-                    return mappedData;
+                    return this.mapDataToWeatherInterface(weather);
                 }
             })
             .then(mappedData => this.getForecast(this.state.city, mappedData))
@@ -45,7 +47,6 @@ class LoggedUser extends Component {
                     `Error fetching current weather for ${this.state.city}: `,
                     error
                 );
-                this.setState({error: error.message});
             });
     }
 
@@ -116,13 +117,20 @@ class LoggedUser extends Component {
         if (Object.keys(currentWeather).length || Object.keys(forecast).length) {
             return (
                 <div>
-                    <Container maxWidth="sm">
+                    <div className={"datetime"}>
+                    <Timer/>
+                    <Label/>
+                    </div>
+
+                    <div className={"calendar"}>
+                    <Calendar/>
+                    </div>
+                    <div className={"weather"}>
                         <Weather
                             currentWeather={currentWeather}
                             forecast={forecast}
                         />
-                    </Container>
-                    <Calendar/>
+                    </div>
                 </div>
             );
         } else {
