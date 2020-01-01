@@ -38,27 +38,6 @@ const AppLayout = props => {
     );
 };
 
-const WeatherCardSubheader = props => {
-    const date = dayjs().isValid(props.currentWeather.date)
-        ? props.currentWeather.date
-        : "";
-    const description = props.currentWeather.description
-        ? props.currentWeather.description
-        : "";
-    dayjs.locale("pl");
-
-
-    return (
-        <span style={{color: "primary"}}>
-            {dayjs(date).format("dddd")}, {dayjs(date).format("h:mm")}{" "}
-            {dayjs(date).format("A")},{" "}
-            {description.replace(/\w\S*/g, txt => {
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            })}
-        </span>
-    );
-};
-
 const Forecast = props => {
     const prefix = "wi wi-";
     const result = props.forecast.map((item, index) => {
@@ -103,9 +82,6 @@ const WeatherCard = props => {
         <Card className="card">
             <CardHeader
                 title={props.currentWeather.city + ", " + props.currentWeather.country}
-                subheader={
-                    <WeatherCardSubheader currentWeather={props.currentWeather}/>
-                }
             />
             <CardContent>
                 <CardMedia
