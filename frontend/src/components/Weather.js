@@ -47,15 +47,15 @@ const Forecast = props => {
                 <ListItemText
                     className="week-day"
                     primary={dayjs(item.dt_txt).format("dddd")}
-                    style={{ flex: "1 1 0%", textAlign: "left",         color: "white"}}
+                    style={{flex: "1 1 0%", textAlign: "left", color: "white"}}
                 ></ListItemText>
                 <IconButton disabled={true} aria-label="forecast icon">
           <span
               className={`wi ${icon}`}
-              style={{ fontSize: "24px" }}
+              style={{fontSize: "24px"}}
           ></span>
                 </IconButton>
-                <span className="temp" style={{ flex: "1 1 0%", textAlign: "right" }}>
+                <span className="temp" style={{flex: "1 1 0%", textAlign: "right"}}>
           <Typography variant="body2" component="span">
             {Math.round(item.min)}&deg; /{" "}
           </Typography>
@@ -87,14 +87,14 @@ const WeatherCard = props => {
                 <CardMedia
                     className={`${props.icon} wi`}
                     src={props.icon}
-                    style={{ fontSize: "128px", float: "right" }}
+                    style={{fontSize: "128px", float: "right"}}
                 />
                 <Typography
                     variant="h2"
                     className="big-temp"
                     color="textPrimary"
                     component="h2"
-                    style={{ fontFamily: "Montserrat", paddingTop: "30px",         color: "white"}}
+                    style={{fontFamily: "Montserrat", paddingTop: "30px", color: "white"}}
                 >
                     {Math.round(props.currentWeather.temperature)}&deg;C
                 </Typography>
@@ -102,7 +102,7 @@ const WeatherCard = props => {
                     variant="subtitle2"
                     className="atmospheric-conditions"
                     gutterBottom
-                    style={{ paddingTop: "40px" ,        color: "white"}}
+                    style={{paddingTop: "40px", color: "white"}}
                 >
           <span
               className={`${strongWind} wi atmospheric`}
@@ -113,8 +113,8 @@ const WeatherCard = props => {
                     ></span>
                     {props.currentWeather.humidity}% Wilgotność
                 </Typography>
-                <Divider variant="middle" />
-                <Forecast forecast={props.forecast} />
+                <Divider variant="middle"/>
+                <Forecast forecast={props.forecast}/>
             </CardContent>
         </Card>
     );
@@ -122,7 +122,7 @@ const WeatherCard = props => {
 
 class Weather extends React.Component {
     render() {
-        const { currentWeather, forecast } = this.props;
+        const {currentWeather, forecast} = this.props;
         const prefix = "wi wi-";
         const icon =
             prefix + weatherIcons.default[this.props.currentWeather.icon_id].icon;

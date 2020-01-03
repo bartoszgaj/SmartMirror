@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
-import { Container } from "@material-ui/core";
 import Weather from "./Weather";
 import Calendar from "react-calendar";
 import '../style/LoggedUser.css';
 import Timer from "./Timer";
 import Label from "./Label";
-import Box from "@material-ui/core/Box";
-
 
 class LoggedUser extends Component {
     constructor(props) {
@@ -119,7 +116,7 @@ class LoggedUser extends Component {
                 <div>
                     <div className={"datetime"}>
                     <Timer/>
-                    <Label/>
+                    <Label users={this.props.users}/>
                     </div>
 
                     <div className={"calendar"}>

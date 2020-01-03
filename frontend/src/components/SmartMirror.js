@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import LoggedUser from "./LoggedUser";
-
-
+import Guest from "./Guest";
 
 class SmartMirror extends Component {
     ws = new WebSocket('ws://localhost:8080/ws');
@@ -17,7 +16,7 @@ class SmartMirror extends Component {
 
         this.ws.onmessage = evt => {
             // listen to data sent from the websocket server
-            const message = JSON.parse(evt.data)
+            const message = JSON.parse(evt.data);
             this.setState({recognitions: message})
         };
 
@@ -31,12 +30,12 @@ class SmartMirror extends Component {
             if (this.state.recognitions.names.filter(function (el) {
                 return el !== "Unknown"
             }).length > 0) {
-                return <LoggedUser/>
+                return <LoggedUser users={this.state.recognitions.names}/>
             } else {
-                return <LoggedUser/>
+                return <Guest/>
             }
         } else {
-            return  <LoggedUser/>;
+            return null
         }
     }
 }
